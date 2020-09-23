@@ -13,7 +13,7 @@ import java.util.concurrent.RecursiveTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FrequenciaPalavra extends RecursiveTask {
+public class FrequenciaPalavra extends RecursiveTask<ArrayList> {
 
     FileReader arquivo;
     FileReader stopwords;
@@ -110,17 +110,25 @@ public class FrequenciaPalavra extends RecursiveTask {
     }
 
     @Override
-    protected Integer compute() {
+    protected ArrayList<FrequenciaPalavra> compute() {
         leArquivo();
         int m;
-        try {
-            if (inicio < fim) {
+        if (inicio < fim) {
+            try {
                 m = calcularFrequencia(lista, 0, lista.size());
-                invokeAll(new FrequenciaPalavra(lista, 0, m - 1).fork(), new FrequenciaPalavra(lista, m + 1, lista.size()).fork());
+                FrequenciaPalavra f1 = new FrequenciaPalavra(lista, 0, m - 1);
+                FrequenciaPalavra f2 = new FrequenciaPalavra(lista, m + 1, lista.size());
+
+                f1.fork();
+                f2.fork();
+
+                ArrayList<FrequenciaPalavra> r1 = f1.join();
+                ArrayList<FrequenciaPalavra> r2 = f2.join();
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(FrequenciaPalavra.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (FileNotFoundException e) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
-        return 0;
+        return new ArrayList<>();
     }
 }
