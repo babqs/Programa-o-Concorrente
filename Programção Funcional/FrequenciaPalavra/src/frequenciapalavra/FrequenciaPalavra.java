@@ -68,11 +68,13 @@ public class FrequenciaPalavra extends RecursiveTask<ArrayList> {
 
         List<String> lista = asList(splited);
         List<String> listaSW = asList(splitedSW);
-
-        //FILTER PARA REMOVER AS STOPWORDS
-        List<String> novaLista = lista.stream().filter((p) -> !listaSW.contains(p)).collect(Collectors.toList());
-       
-        calcularFrequencia((ArrayList<String>) novaLista, 0, novaLista.size());
+        
+        calcularFrequencia((ArrayList<String>) lista, 0, lista.size());
+    }
+    
+    //FILTER PARA REMOVER AS STOPWORDS
+    public static List<String> removeStopWords(List<String> lista, List<String> listaSW){
+        return lista.stream().filter((p) -> !listaSW.contains(p)).collect(Collectors.toList());
     }
 
     public Integer calcularFrequencia(ArrayList<String> lista, int inicio, int fim) {
